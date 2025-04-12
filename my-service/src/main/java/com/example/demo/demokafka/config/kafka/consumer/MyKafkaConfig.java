@@ -5,9 +5,8 @@ import com.example.demo.demokafka.config.kafka.CommonKafkaConfig;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.avro.specific.SpecificRecord;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.common.TopicPartition;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -26,10 +25,8 @@ import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-public class MyKafkaConfig extends CommonKafkaConfig<String, SpecificRecord> {
-
-	@Autowired
-	private KafkaProperties kafkaProperties;
+public class MyKafkaConfig extends CommonKafkaConfig<String, GenericRecord> {
+	
 
 	@Value ("${app.kafka.my-consumer.topic.retry}")
 	private String retryTopic;
@@ -38,18 +35,18 @@ public class MyKafkaConfig extends CommonKafkaConfig<String, SpecificRecord> {
 	private String dltTopic;
 
 	@Bean
-	public ConsumerFactory<String, SpecificRecord> specificConsumerFactory() {
+	public ConsumerFactory<String, GenericRecord> consumerFactory(KafkaProperties kafkaProperties) {
 		return consumerResource(kafkaProperties);
 	}
 
 	@Bean
-	public ProducerFactory<String, SpecificRecord> specificProducerFactory() {
+	public ProducerFactory<String, GenericRecord> producerFactory(KafkaProperties kafkaProperties) {
 		return producerResource(kafkaProperties);
 	}
 
 	@Bean
-	public KafkaTemplate<String, SpecificRecord> specificKafkaTemplate(ProducerFactory<String, SpecificRecord> specificProducerFactory) {
-		return new KafkaTemplate<>(specificProducerFactory);
+	public KafkaTemplate<String, GenericRecord> kafkaTemplate(ProducerFactory<String, GenericRecord> producerFactory) {
+		return new KafkaTemplate<>(producerFactory);
 	}
 
 
@@ -57,24 +54,24 @@ public class MyKafkaConfig extends CommonKafkaConfig<String, SpecificRecord> {
 	 * TOPIC CONFIGURATION
 	 ******************************/
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, SpecificRecord> myListenerFactory(
-			ConsumerFactory<String, SpecificRecord> specificConsumerFactory, KafkaTemplate<String, SpecificRecord> specificKafkaTemplate,
+	public ConcurrentKafkaListenerContainerFactory<String, GenericRecord> myListenerFactory(
+			ConsumerFactory<String, GenericRecord> consumerFactory, KafkaTemplate<String, GenericRecord> kafkaTemplate,
 			DeadLetterPublishingRecoverer movementDeadLetter) {
 
-		return retryKafkaListenerContainerFactory(specificConsumerFactory, retryTopic, specificKafkaTemplate, movementDeadLetter, fixedBackOffMain);
+		return retryKafkaListenerContainerFactory(consumerFactory, retryTopic, kafkaTemplate, movementDeadLetter, fixedBackOffMain);
 	}
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, SpecificRecord> myRetryListenerFactory(
-			ConsumerFactory<String, SpecificRecord> specificConsumerFactory,
+	public ConcurrentKafkaListenerContainerFactory<String, GenericRecord> myRetryListenerFactory(
+			ConsumerFactory<String, GenericRecord> consumerFactory,
 			DeadLetterPublishingRecoverer myDeadLetter) {
 
-		return retryKafkaListenerContainerFactory(specificConsumerFactory, myDeadLetter, fixedBackOffRetry);
+		return retryKafkaListenerContainerFactory(consumerFactory, myDeadLetter, fixedBackOffRetry);
 	}
 
 	@Bean
-	public DeadLetterPublishingRecoverer myDeadLetter(KafkaTemplate<String, SpecificRecord> specificKafkaTemplate) {
-		return new DeadLetterPublishingRecoverer(specificKafkaTemplate,
+	public DeadLetterPublishingRecoverer myDeadLetter(KafkaTemplate<String, GenericRecord> kafkaTemplate) {
+		return new DeadLetterPublishingRecoverer(kafkaTemplate,
 				(consumerRecord, exception) -> new TopicPartition((dltTopic), consumerRecord.partition()));
 	}
 

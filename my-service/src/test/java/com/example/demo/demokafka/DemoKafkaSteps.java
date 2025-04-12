@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
 
@@ -19,6 +20,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = DemoKafkaApplication.class)
 @ContextConfiguration(initializers = DemoKafkaSteps.Initializer.class, classes = KafkaInterceptor.class)
 @Slf4j
+@ActiveProfiles({"test"})
 public class DemoKafkaSteps {
 
     private static final PostgreSQLContainer<?> postgres =
@@ -43,11 +45,11 @@ public class DemoKafkaSteps {
                     "spring.datasource.password=" + postgres.getPassword(),
                     "spring.kafka.consumer.auto-offset-reset=earliest",
                     "spring.kafka.bootstrap-servers=" + bootstrapServers,
-                    "spring.kafka.properties.schema.registry.url=" + schemaRegistryUrl,
+                    "spring.kafka.producer.properties.schema.registry.url=" + schemaRegistryUrl,
+                    "spring.kafka.consumer.properties.schema.registry.url=" + schemaRegistryUrl,
                     "app.kafka.my-consumer.auto-offset-reset=earliest",
-                    "app.kafka.my-consumer.bootstrap-servers=" + bootstrapServers,
-                    "app.kafka.my-consumer.schema-registry.url=" + schemaRegistryUrl 
-                        // in-memory schema registry
+                    "spring.kafka.consumer.client-id=test-client",
+                    "spring.kafka.consumer.group-id=test-group"
             ).applyTo(configurableApplicationContext.getEnvironment());
         }
     }

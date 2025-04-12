@@ -31,14 +31,6 @@ import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZE
 @Configuration
 public class CommonKafkaConfig<K, V> {
 
-	protected String bootstrapServers;
-	protected String keyDeserializer;
-	protected String valueDeserializer;
-	protected int maxPollRecords;
-	protected String autoOffsetReset;
-	protected String groupId;
-	protected SchemaRegistry schemaRegistry;
-	protected Properties properties;
 	protected FixedBackOff fixedBackOffMain;
 	protected FixedBackOff fixedBackOffRetry;
 	@Value ("${app.kafka.retry.topic.main.max}")
@@ -58,33 +50,19 @@ public class CommonKafkaConfig<K, V> {
 
 
 	public ConsumerFactory<K, V> consumerResource(KafkaProperties kafkaProperties) {
-		Map<String, Object> properties = kafkaProperties.buildConsumerProperties(null);
-		properties.put(BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-		properties.put(AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
-		properties.put(KEY_DESERIALIZER_CLASS_CONFIG, keyDeserializer);
-		properties.put(VALUE_DESERIALIZER_CLASS_CONFIG, valueDeserializer);
-		properties.put(MAX_POLL_RECORDS_CONFIG, maxPollRecords);
-		properties.put(GROUP_ID_CONFIG, groupId);
-		buildRegistryProperties(properties);
+		//Map<String, Object> properties = kafkaProperties.buildConsumerProperties(null);
 
-		properties.put("spring.json.trusted.packages", this.properties.getJsonTrustedPackages());
-		properties.put("spring.deserializer.key.delegate.class", this.properties.getDeserializerKeyDelegateClass());
-		properties.put("spring.deserializer.value.delegate.class", this.properties.getDeserializerValueDelegateClass());
-		properties.put(SPECIFIC_AVRO_READER_CONFIG, this.properties.isValueDeserializerSpecificAvroReader());
-		properties.put(ENABLE_AUTO_COMMIT_CONFIG, false);
 
-		return new DefaultKafkaConsumerFactory<>(properties);
+
+		//properties.put(SPECIFIC_AVRO_READER_CONFIG, this.properties.isValueDeserializerSpecificAvroReader());
+
+		return new DefaultKafkaConsumerFactory<>(kafkaProperties.buildConsumerProperties(null));
 	}
 
 	public ProducerFactory<K, V> producerResource(KafkaProperties producerProperty) {
-		Map<String, Object> producerProperties = producerProperty.buildProducerProperties(null);
-		buildRegistryProperties(producerProperties);
-		return new DefaultKafkaProducerFactory<>(producerProperties);
+		return new DefaultKafkaProducerFactory<>(producerProperty.buildProducerProperties(null));
 	}
 
-	private void buildRegistryProperties(Map<String, Object> properties) {
-		properties.put(SCHEMA_REGISTRY_URL_CONFIG, schemaRegistry.getUrl());
-	}
 
 
 	protected ConcurrentKafkaListenerContainerFactory<K, V> retryKafkaListenerContainerFactory(
@@ -120,16 +98,4 @@ public class CommonKafkaConfig<K, V> {
 	}
 
 
-	@Data
-	public static class SchemaRegistry {
-		String url;
-	}
-
-	@Data
-	public static class Properties {
-		String jsonTrustedPackages;
-		String deserializerKeyDelegateClass;
-		String deserializerValueDelegateClass;
-		boolean valueDeserializerSpecificAvroReader;
-	}
 }

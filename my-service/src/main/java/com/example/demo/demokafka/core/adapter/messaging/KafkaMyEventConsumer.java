@@ -20,19 +20,20 @@ public class KafkaMyEventConsumer {
 
     @KafkaListener(
             topics = "${app.kafka.my-consumer.topic.retry}",
-            clientIdPrefix = "${app.kafka.my-consumer.client-id}",
-            groupId = "${app.kafka.my-consumer.group-id}",
+            clientIdPrefix = "${spring.kafka.consumer.client-id}",
+            groupId = "${spring.kafka.consumer.group-id}",
             containerFactory = "myRetryListenerFactory",
             autoStartup = "${app.kafka.my-consumer.enabled}"
     )
     @KafkaListener(
             topics = "${app.kafka.my-consumer.topic.main}",
-            clientIdPrefix = "${app.kafka.my-consumer.client-id}",
-            groupId = "${app.kafka.my-consumer.group-id}",
+            clientIdPrefix = "${spring.kafka.consumer.client-id}",
+            groupId = "${spring.kafka.consumer.group-id}",
             containerFactory = "myListenerFactory",
             autoStartup = "${app.kafka.my-consumer.enabled}"
     )
     public void consumePaymentEvents(ConsumerRecord<String, MyEvent> consumerRecord) {
+        System.out.println("received event:" + consumerRecord);
         log.info("received event: {}", consumerRecord);
         var myEvent = consumerRecord.value();
         myService.handleReceivedEvent(MyModel.fromEvent(myEvent));

@@ -9,7 +9,7 @@
         <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
 
-    <artifactId>demo-kafka</artifactId>
+    <artifactId>demo-flow-kafka</artifactId>
     <name>my-service</name>
 
 
@@ -19,18 +19,6 @@
             <artifactId>avro-schema</artifactId>
         </dependency>
 
-        <!-- web -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-
-        <!-- Messaging -->
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
@@ -50,17 +38,6 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Ops -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
         <!-- Tools -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -70,19 +47,12 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
-            <version>4.4</version>
         </dependency>
 
         <!-- Tests -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>1.20.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -96,23 +66,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-
-    <!--
-    This repository is needed for resolving Confluent Kafka dependencies such as Kafka clients,
-    Schema Registry, and other related tools. Without it, Maven won't be able to find these dependencies.
-    -->
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>2023.0.0</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>

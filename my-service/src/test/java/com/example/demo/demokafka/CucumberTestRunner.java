@@ -10,5 +10,5 @@ import org.junit.runner.RunWith;
         features = "classpath:features",
         glue = {"com.example.demo.demokafka", "com.decathlon.tzatziki.steps", "com.decathlon.tzatziki.steps.custom"},
         tags = "not @ignore")
-public class CucumberTest {
+public class CucumberTestRunner {
 }

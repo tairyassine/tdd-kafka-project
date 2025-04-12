@@ -29,30 +29,22 @@
         <lombok.version>1.18.38</lombok.version>
         <tzatziki.version>1.8.2</tzatziki.version>
         <testcontainers.version>1.17.6</testcontainers.version>
-        <postgresql.version>[1.20.4,2)</postgresql.version>
+        <testcontainer.version>[1.20.4,2)</testcontainer.version>
+        <postgresql.version>[42.7.5,42.8)</postgresql.version>
+        <spring-cloud-dependencies.verion>[2024.0.1,2025)</spring-cloud-dependencies.verion>
         <maven-cucumber-reporting.version>5.8.5</maven-cucumber-reporting.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
+
             <dependency>
                 <groupId>com.example.demo</groupId>
                 <artifactId>avro-schema</artifactId>
                 <version>${avro-schema.version}</version>
             </dependency>
 
-            <!-- web -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-            </dependency>
-
-
-            <!-- Messaging -->
-            <dependency>
-                <groupId>org.springframework.kafka</groupId>
-                <artifactId>spring-kafka</artifactId>
-            </dependency>
             <dependency>
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro</artifactId>
@@ -63,26 +55,12 @@
                 <artifactId>kafka-avro-serializer</artifactId>
                 <version>${avro.kafka.version}</version>
             </dependency>
-            <!-- Database -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-jpa</artifactId>
-            </dependency>
+
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <scope>runtime</scope>
-            </dependency>
-
-            <!-- Ops -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-actuator</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>io.micrometer</groupId>
-                <artifactId>micrometer-registry-prometheus</artifactId>
-                <scope>runtime</scope>
+                <version>${postgresql.version}</version>
             </dependency>
 
             <!-- Tools -->
@@ -98,16 +76,10 @@
                 <version>${commons-collections4.version}</version>
             </dependency>
 
-            <!-- Tests -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <scope>test</scope>
-            </dependency>
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>${postgresql.version}</version>
+                <version>${testcontainers.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -124,6 +96,50 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <!-- web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- Database -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <!-- Messaging -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <!-- Tests -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Ops -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>${spring-cloud-dependencies.verion}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+
+    </dependencies>
 
 
     <repositories>

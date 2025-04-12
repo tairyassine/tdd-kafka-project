@@ -1,0 +1,23 @@
+app:
+  kafka:
+    retry:
+      topic:
+        main:
+          timems: 0
+          max: 0
+        retry:
+          timems: 0
+          max: 0
+    my-consumer:
+      enabled: true
+      topic:
+        main: test_main_topic
+        retry: test_retry_topic
+        error: test_dlt_topic
+        output: test_output_topic
+
+logging:
+  level:
+    root: info
+    org:
+      testcontainers: debug

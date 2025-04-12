@@ -1,0 +1,64 @@
+logging:
+  level:
+    root: info
+
+spring:
+  application:
+    name: springboot-kafka-avro
+  kafka:
+    bootstrap-server: ${KAFKA_BOOTSTRAP_SERVER}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema.registry.url: ${SCHEMA_REGISTRY_URL}
+        #spring.serializer.key.delegate.class: org.apache.kafka.common.serialization.StringSerializer
+        #spring.serializer.value.delegate.class: io.confluent.kafka.serializers.KafkaAvroSerializer
+    consumer:
+      client-id: ${KAFKA_CLIENT_ID}
+      group-id: ${KAFKA_GROUP_ID}
+      auto-offset-reset: latest
+      max-poll-records: 5
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      #org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      #org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        schema.registry.url: ${SCHEMA_REGISTRY_URL}
+        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: io.confluent.kafka.serializers.KafkaAvroDeserializer
+        enable.auto.commit: false
+        specific.avro.reader: true
+    listener:
+      missing-topics-fatal: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydatabase
+    username: myuser
+    password: mypassword
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+app:
+  kafka:
+    retry:
+      topic:
+        main:
+          timems: ${KAFKA_RETRY_TIMEMS_MAIN_TOPIC:0}
+          max: ${KAFKA_RETRY_MAX_MAIN_TOPIC:0}
+        retry:
+          timems: ${KAFKA_RETRY_TIMEMS:30000}
+          max: ${KAFKA_RETRY_MAX:3}
+    my-consumer:
+      enabled: ${CONSUMER_ENABLED}
+      topic:
+        main: ${TOPIC_MAIN}
+        retry: ${TOPIC_RETRY}
+        error: ${TOPIC_DLT}
+        output: ${TOPIC_OUTPUT}
+  external-api:
+    url: ${EXTERNAL_URL}

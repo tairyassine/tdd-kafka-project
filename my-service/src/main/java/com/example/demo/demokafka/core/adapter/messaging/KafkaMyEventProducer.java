@@ -6,6 +6,7 @@ import com.example.demo.demokafka.core.port.MyEventProducer;
 import com.example.demo.demokafka.event.MyEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.specific.SpecificRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +28,7 @@ public class KafkaMyEventProducer implements MyEventProducer {
     @Override
     public void publishOutputEvent(MyModel myModel) {
         MyEvent outputEvent = myModel.toEvent();
-        ProducerRecord<String, SpecificRecord> producerRecord = new ProducerRecord<>(
+        ProducerRecord<String, GenericRecord> producerRecord = new ProducerRecord<>(
                 outputTopic,
                 0,
                 "",
