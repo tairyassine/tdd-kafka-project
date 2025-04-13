@@ -5,8 +5,8 @@ import com.example.demo.demokafka.common.exceptions.FunctionalException;
 import com.example.demo.demokafka.core.adapter.messaging.KafkaMyEventProducer;
 import com.example.demo.demokafka.core.domain.model.MyModel;
 
-import com.example.demo.demokafka.core.port.ExternalApiClient;
-import com.example.demo.demokafka.core.port.MyEventDataGateway;
+import com.example.demo.demokafka.core.port.out.webclient.ExternalApiClient;
+import com.example.demo.demokafka.core.port.out.database.MyEventDataGateway;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

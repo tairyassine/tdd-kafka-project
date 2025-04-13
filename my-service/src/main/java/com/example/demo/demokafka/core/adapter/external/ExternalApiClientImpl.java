@@ -1,7 +1,7 @@
 package com.example.demo.demokafka.core.adapter.external;
 
 import com.example.demo.demokafka.core.domain.model.MyModel;
-import com.example.demo.demokafka.core.port.ExternalApiClient;
+import com.example.demo.demokafka.core.port.out.webclient.ExternalApiClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

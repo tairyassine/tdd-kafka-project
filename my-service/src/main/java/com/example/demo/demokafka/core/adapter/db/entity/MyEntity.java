@@ -31,10 +31,10 @@ public class MyEntity {
                 .build();
     }
 
-    public MyModel toModel() {
+    public static MyModel toModel(MyEntity entity) {
         return MyModel.builder()
-                .id(id)
-                .label(label)
+                .id(entity.getId())
+                .label(entity.getLabel())
                 .build();
     }
 

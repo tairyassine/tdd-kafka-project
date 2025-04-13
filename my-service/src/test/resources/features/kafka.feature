@@ -27,6 +27,13 @@ Feature: consuming, persist and sending events with retry & DLT
     And within 5000ms "/posts" has received 1 POST payload
     And payload.body.json.id == 1
 
+    When a user get on "/api/v1/model/1"
+    Then it receives a status OK_200 and:
+    """yaml
+     id: 1
+     label: a label
+    """
+
     And it is not true that the test_retry_topic topic contains 1 messages
     And it is not true that the test_dlt_topic topic contains 1 messages
 

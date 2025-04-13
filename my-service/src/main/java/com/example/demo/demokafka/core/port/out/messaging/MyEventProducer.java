@@ -1,4 +1,4 @@
-package com.example.demo.demokafka.core.port;
+package com.example.demo.demokafka.core.port.out.messaging;
 
 import com.example.demo.demokafka.core.domain.model.MyModel;
 
